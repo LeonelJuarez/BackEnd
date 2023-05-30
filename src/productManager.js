@@ -1,6 +1,6 @@
-const { error } = require("console");
+////const { error } = require("console");
 const fs = require("fs");
-const { json } = require("stream/consumers");
+//const { json } = require("stream/consumers");
 const archivo = "archivo.json"
 
 
@@ -13,7 +13,7 @@ class ProductManager {
             this.products=[];
         }
         this.id = this.products.reduce((prev, curr) =>{
-            curr.id>=prev
+            curr.id >= prev.id
             return curr.id+1;
         },1)
     }
@@ -126,7 +126,7 @@ class ProductManager {
     try {
         let manager = new ProductManager();
         //Array vacio
-        console.log(await manager.getProducts());
+        //console.log(await manager.getProducts());
         //Se agregan productos
         await manager.addProduct({
             title: "producto prueba",
@@ -135,7 +135,7 @@ class ProductManager {
             thumbnail: "Sin imagen",
             code: "acb123",
             stock: 24
-        });
+    });
         await manager.addProduct({
             title: "segundo producto prueba",
             description: "segundo producto",
@@ -152,11 +152,8 @@ class ProductManager {
             code: "acfdfb122",
             stock: 5
         });
-        console.log(await manager.getProducts());
         
-        await manager.getProductByld(1);
-        await manager.updateProduct(2,{price:349} );
-        await manager.deleteProduct(2)
+  
     }
     
     catch(error){
@@ -164,3 +161,5 @@ class ProductManager {
     
     }
 })();
+
+module.exports = {ProductManager};
