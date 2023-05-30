@@ -1,13 +1,21 @@
 const { error } = require("console");
 const fs = require("fs");
+const { json } = require("stream/consumers");
 const archivo = "archivo.json"
 
 
 class ProductManager {
     constructor() {
-        this.products = [];
-        this.path= archivo;
-        this.id = 1;
+        this.path = archivo;
+        try{
+            this.products = JSON.parse(fs.readFileSync(this.path, "utf-8"));  //archivo;
+        }catch(error){
+            this.products=[];
+        }
+        this.id = this.products.reduce((prev, curr) =>{
+            curr.id>=prev
+            return curr.id+1;
+        },1)
     }
 
     async addProduct(obj) {
@@ -38,14 +46,11 @@ class ProductManager {
             thumbnail,
             code,
             stock
-        });
-        
-        await fs.promises.writeFile(this.path, JSON.stringify(this.products))
-    
+        });   
+        await fs.promises.writeFile(this.path, JSON.stringify(this.products)); 
     } catch(error){
         console.log(error);
-
-    }
+        }
     }
 
 
@@ -58,7 +63,6 @@ class ProductManager {
             console.log(`Error al leer el archivo ${error}`);
             return [];
         }
-       // return this.products;
     }
 
     valadateId() {
@@ -122,7 +126,7 @@ class ProductManager {
     try {
         let manager = new ProductManager();
         //Array vacio
-        console.log(manager.getProducts());
+        console.log(await manager.getProducts());
         //Se agregan productos
         await manager.addProduct({
             title: "producto prueba",
@@ -148,10 +152,10 @@ class ProductManager {
             code: "acfdfb122",
             stock: 5
         });
-        console.log(manager.getProducts());
+        console.log(await manager.getProducts());
         
         await manager.getProductByld(1);
-        await manager.updateProduct(2,"price",349);
+        await manager.updateProduct(2,{price:349} );
         await manager.deleteProduct(2)
     }
     
@@ -160,19 +164,3 @@ class ProductManager {
     
     }
 })();
-/*
-
-//Se muestra producto
-console.log(manager.getProducts());
-//Se agrega el mismo producto: Debe tirar error
-manager.addProduct({
-    title: "producto prueba 2",
-    description: "Este es un producto de prueba",
-    price: 200,
-    thumbnail: "Sin imagen",
-    code: "acb123",
-    stock: 24
-});
-//Se busca producto con id
-console.log(manager.getProductByld(1));
-console.log(manager.getProductByld(9));*/
