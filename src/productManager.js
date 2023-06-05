@@ -122,6 +122,7 @@ class ProductManager {
 }
 
 //PROCESO DE TESTING
+/*
 (async () => {
     try {
         let manager = new ProductManager();
@@ -160,6 +161,6 @@ class ProductManager {
         console.log(error)
     
     }
-})();
+})();*/
 
 module.exports = {ProductManager};
